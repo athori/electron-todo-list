@@ -7,7 +7,7 @@ const {app, BrowserWindow, Menu, ipcMain} = electron;
 let mainWindow;
 
 //Listens for app to be ready
-app.on('ready', function(){
+app.on('ready', ()=>{
     //Creates main Todo List window
     mainWindow = new BrowserWindow({});
 
@@ -25,6 +25,8 @@ app.on('ready', function(){
     Menu.setApplicationMenu(mainMenu)
 
 });//end app.on
+
+//creates the add item window
 function createAddWindow(){
     //creates new window
     addWindow = new BrowserWindow({
@@ -32,7 +34,7 @@ function createAddWindow(){
         height: 300,
         title: 'Add Item to TODO List'
     });//end mainWindow
-    //loads html window
+    //loads html into window
     addWindow.loadURL(url.format({
         pathname: path.join(__dirname, 'addWindow.html'),
         protocol: 'file:',
@@ -41,6 +43,26 @@ function createAddWindow(){
     //Handle gargbage collection
     addWindow.on('close',()=>{
         addWindow = null;
+    })
+}
+
+//creates the read file window
+function createReadWindow(){
+    //creates new window
+    readWindow = new BrowserWindow({
+        width:600,
+        height: 600,
+        title: 'Previous Todo Lists'
+    });//end mainWindow
+    //loads html into window
+    readWindow.loadURL(url.format({
+        pathname: path.join(__dirname, 'readWindow.html'),
+        protocol: 'file:',
+        slashes: true
+    }))//end load mainWindo.html
+    //Handle gargbage collection
+    readWindow.on('close',()=>{
+        readWindow = null;
     })
 }
 
@@ -57,7 +79,10 @@ const mainMenuTemplate = [
         label: 'File',
         submenu: [
             {
-                label: 'Open File'
+                label: 'Open File',
+                click(){
+                    createReadWindow();
+                }
             },
             {
                 type: 'separator'

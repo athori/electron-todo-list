@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/athori/electron-todo-list#readme",
   "dependencies": {
-    "electron": "^1.7.9"
+    "electron": "^1.7.9",
+    "json-file": "^0.1.0"
   }
 }

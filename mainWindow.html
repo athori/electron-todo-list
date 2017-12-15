@@ -11,27 +11,38 @@
             <a class="brand-logo center">Todo List</a>
         </div>
     </nav>
-    <ul>
-        <!--js will fill this out -->
-    </ul>
+   
+    <div id="content">
+        <ul>
+            
+        </ul>
+        
+    <button id="btn">Create a file</button>
+    
+    
     <script>
         const electron = require('electron');
         const {ipcRenderer} = electron;
         const ul = document.querySelector('ul');
-      
+        const app = require('electron').remote;
+        const dialog = app.dialog
+        const fs = require('fs');
+        
+        
           //Add Item
-          ipcRenderer.on('item:add', function(event, item){
-              ul.className = 'collection';
-              const li = document.createElement('li');
-              li.className = 'collection-item';
-              const itemText = document.createTextNode(item);
-              li.appendChild(itemText);
-              ul.appendChild(li);
+        ipcRenderer.on('item:add', function(event, item){
+            ul.className = 'collection';
+            const li = document.createElement('li');
+            li.className = 'collection-item';
+            const itemText = document.createTextNode(item);
+            li.appendChild(itemText);
+            ul.appendChild(li);
+           
         });
         //Clear Items
         ipcRenderer.on('item:clear', ()=>{
-              ul.innerHTML ='';
-              ul.className = '';
+            ul.innerHTML ='';
+            ul.className = '';
         })
   
         //remove item
@@ -42,6 +53,23 @@
               ul.className = '';
             }
         }
+
+        //save file
+        document.getElementById('btn').addEventListener('click', saveFile);
+        function saveFile(){
+    dialog.showSaveDialog((filename)=>{
+        if(filename === undefined){
+            alert("You didn't save the file!")
+            return;
+        }
+        const content = document.getElementById('content').value;
+
+        fs.writeFile(filename, content, (error)=>{
+            if(error)console.log(error)
+            alert('The file has been saved')
+        })
+    })
+}
     </script>
 </body>
 </html>

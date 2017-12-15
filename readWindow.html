@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    
+    <title>Todo List</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/css/materialize.min.css">
+</head>
+<body>
+    <nav>
+        <div class="nav-wrapper">
+            <a class="brand-logo center">Load Old Lists</a>
+        </div>
+    </nav>
+    <button id="open">Open a file</button>
+    <textarea id="output" rows=5></textarea>
+    <script>
+        const app = require('electron').remote;
+        const dialog = app.dialog
+        const fs = require('fs');
+
+        document.getElementById('open').addEventListener('click', openfile);
+
+        function openfile(){
+            dialog.showOpenDialog((filenames)=>{
+                if(filenames === undefined){
+                    alert("no files were selected")
+                    return;
+                }
+                readFile(filenames[0]);
+            })
+        }
+        function readFile(filepath){
+            fs.readFile(filepath, 'utf-8', (err, data)=>{
+                if(err){
+                    alert("There was a problem retreiving your file")
+                    return
+                }
+                const textArea = document.getElementById('output')
+                textArea.value = data
+            })
+        }
+    </script>
+</body>
+</html>
